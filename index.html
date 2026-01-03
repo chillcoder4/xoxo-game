@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XOXO – Real-Time Multiplayer Game</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Background Animation -->
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div id="app-container">
+        
+        <!-- === LOBBY SCREEN (Minimal) === -->
+        <main id="lobby-screen" class="container glass-panel fade-in">
+            <div class="lobby-header">
+                <h1 class="game-title">XOXO</h1>
+                <p class="subtitle">Multiplayer</p>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Choose a Username" maxlength="12" autocomplete="off">
+            </div>
+
+            <div class="actions">
+                <button id="create-btn" class="btn primary-btn pulse-glow">Create New Room</button>
+                
+                <div class="divider">
+                    <span>OR JOIN</span>
+                </div>
+
+                <div class="join-group">
+                    <input type="text" id="room-code-input" placeholder="Room ID" autocomplete="off">
+                    <button id="join-btn" class="btn secondary-btn">Join</button>
+                </div>
+            </div>
+
+            <!-- About Trigger Icon (Subtle) -->
+            <div class="info-trigger" id="about-btn" title="Developer Info">
+                <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <circle cx="12" cy="12" r="9" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" />
+                    <polyline points="11 12 12 12 12 16 13 16" />
+                </svg>
+            </div>
+        </main>
+
+        <!-- === GAME SCREEN === -->
+        <div id="game-screen" class="hidden">
+            
+            <!-- Header -->
+            <header class="game-header glass-strip">
+                <div class="logo">XOXO</div>
+                <div class="room-pill" id="room-info-display" title="Click to Copy Room ID">
+                    <span class="label">Room:</span>
+                    <span id="display-room-id" class="code">...</span> 
+                    <span class="icon">📋</span>
+                </div>
+                <button id="leave-btn" class="btn-xs danger-text">Exit</button>
+            </header>
+
+            <div class="game-wrapper">
+                <!-- Board Section -->
+                <section class="game-board-area">
+                    <div class="players-hud">
+                        <div class="player p-x" id="p-x-display">
+                            <div class="avatar">X</div>
+                            <div class="name-tag" id="name-x">...</div>
+                            <div class="score-badge" id="score-x">0</div>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="player p-o" id="p-o-display">
+                            <div class="avatar">O</div>
+                            <div class="name-tag" id="name-o">...</div>
+                            <div class="score-badge" id="score-o">0</div>
+                        </div>
+                    </div>
+
+                    <div class="status-bar" id="status-msg">Waiting for opponent...</div>
+
+                    <div class="board-container">
+                        <div class="board" id="board">
+                            <div class="cell" data-index="0"></div>
+                            <div class="cell" data-index="1"></div>
+                            <div class="cell" data-index="2"></div>
+                            <div class="cell" data-index="3"></div>
+                            <div class="cell" data-index="4"></div>
+                            <div class="cell" data-index="5"></div>
+                            <div class="cell" data-index="6"></div>
+                            <div class="cell" data-index="7"></div>
+                            <div class="cell" data-index="8"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Chat Section -->
+                <section class="game-chat-area">
+                    <div class="chat-header">
+                        <span>Live Chat</span>
+                        <div class="online-dot"></div>
+                    </div>
+                    
+                    <div class="chat-viewport" id="chat-messages">
+                        <div class="message system"><span>Welcome to the game! 👋</span></div>
+                    </div>
+                    
+                    <div class="chat-composer">
+                        <!-- Instant Emoji Bar -->
+                        <div class="quick-emojis">
+                            <span>👍</span><span>😂</span><span>🔥</span><span>😮</span><span>🤬</span><span>😭</span><span>👋</span><span>🤝</span>
+                        </div>
+                        <div class="input-row">
+                            <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                            <button id="send-btn" class="send-icon-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="10" y1="14" x2="21" y2="3" /><path d="M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Info Modal (Hidden) -->
+    <div id="info-modal" class="modal-overlay hidden">
+        <div class="modal glass-panel fade-up">
+            <div class="modal-header">
+                <h2>About</h2>
+                <button class="close-icon" id="info-close-btn">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p class="project-name">XOXO Multiplayer</p>
+                <p class="dev-name">Dev: Jaswant Yadav</p>
+                <div class="links">
+                    <a href="https://instagram.com/jaswan_070y" target="_blank" class="social-link">Instagram</a>
+                    <a href="mailto:jaswanty132@gmail.com" class="social-link">Email</a>
+                </div>
+                <p class="description">
+                    "Real-time multiplayer XOXO built with pure HTML, JavaScript, and Firebase. 
+                    Smooth gameplay, instant chat, mobile-first design."
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <div class="modal glass-panel bounce-in">
+            <h2 id="modal-title">Game Over!</h2>
+            <p id="modal-msg">Player X Wins!</p>
+            <div class="modal-actions">
+                <button id="modal-close-btn" class="btn primary-btn">Close</button>
+                <button id="modal-quit-btn" class="btn secondary-btn" style="margin-top:10px">Quit</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
